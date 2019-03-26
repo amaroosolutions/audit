@@ -50,36 +50,36 @@ class AuditLog(models.Model):
     @api.multi
     def _format_value(self, field, value):
         self.ensure_one()
-        # value = ''
-        # if not value and field.type not in ('boolean', 'integer', 'float'):
-        #     return ''
-        # if field.type == 'selection':
-        #     selection = field.selection
-        #     if callable(selection):
-        #         selection = selection(self.env[self.model_id.model])
-        #     return dict(selection).get(value, value)
-        # if field.type == 'many2one' and value:
-        #     return self.env[field.comodel_name].browse(value). \
-        #         exists().display_name or value
-        # if field.type == 'reference' and value:
-        #     res_model, res_id = value.split(',')
-        #     return self.env[res_model].browse(int(res_id)).exists(). \
-        #         display_name or value
-        # if field.type in ('one2many', 'many2many') and value:
-        #     return ', '.join([self.env[field.comodel_name].browse(rec_id).
-        #                       exists().display_name or str(rec_id)
-        #                       for rec_id in value])
-        # if field.type == 'binary' and value:
-        #     return '&lt;binary data&gt;'
-        # if field.type == 'datetime':
-        #     from_tz = tz.tzutc()
-        #     to_tz = tz.gettz(self.env.user.tz)
-        #     datetime_wo_tz = value
-        #     datetime_with_tz = datetime_wo_tz.replace(tzinfo=from_tz)
-        #     return fields.Datetime.to_string(
-        #         datetime_with_tz.astimezone(to_tz))
-        # if not value:
-        #     value = ''
+        value = ''
+        if not value and field.type not in ('boolean', 'integer', 'float'):
+            return ''
+        if field.type == 'selection':
+            selection = field.selection
+            if callable(selection):
+                selection = selection(self.env[self.model_id.model])
+            return dict(selection).get(value, value)
+        if field.type == 'many2one' and value:
+            return self.env[field.comodel_name].browse(value). \
+                exists().display_name or value
+        if field.type == 'reference' and value:
+            res_model, res_id = value.split(',')
+            return self.env[res_model].browse(int(res_id)).exists(). \
+                display_name or value
+        if field.type in ('one2many', 'many2many') and value:
+            return ', '.join([self.env[field.comodel_name].browse(rec_id).
+                              exists().display_name or str(rec_id)
+                              for rec_id in value])
+        if field.type == 'binary' and value:
+            return '&lt;binary data&gt;'
+        if field.type == 'datetime':
+            from_tz = tz.tzutc()
+            to_tz = tz.gettz(self.env.user.tz)
+            datetime_wo_tz = value
+            datetime_with_tz = datetime_wo_tz.replace(tzinfo=from_tz)
+            return fields.Datetime.to_string(
+                datetime_with_tz.astimezone(to_tz))
+        if not value:
+            value = ''
         value = ''
         return value
 
