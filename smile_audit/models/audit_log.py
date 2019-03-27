@@ -50,7 +50,6 @@ class AuditLog(models.Model):
     @api.multi
     def _format_value(self, field, value):
         self.ensure_one()
-        value = ''
         if not value and field.type not in ('boolean', 'integer', 'float'):
             return ''
         if field.type == 'selection':
@@ -78,9 +77,6 @@ class AuditLog(models.Model):
             datetime_with_tz = datetime_wo_tz.replace(tzinfo=from_tz)
             return fields.Datetime.to_string(
                 datetime_with_tz.astimezone(to_tz))
-        if not value:
-            value = ''
-        value = ''
         return value
 
     @api.multi

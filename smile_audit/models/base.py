@@ -11,6 +11,19 @@ from odoo.tools.safe_eval import safe_eval
 class Base(models.AbstractModel):
     _inherit = "base"
 
+    @api.model
+    def create(self, vals):
+        res = super(Base, self).create(vals)
+        if not res.display_name:
+            res.display_name = res.name_get()[0][1]
+        return res
+
+    @api.multi
+    def write(self, vals):
+        if vals.get('name'):
+            vals.update({'display_name': vals['name']})
+        return super(Base, self).write(vals)
+
     @api.multi
     def _read_from_database(self, field_names, inherited_field_names=[]):
         super(Base, self)._read_from_database(
