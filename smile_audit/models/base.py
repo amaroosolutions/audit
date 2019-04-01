@@ -14,7 +14,6 @@ class Base(models.AbstractModel):
     @api.model
     def create(self, vals):
         res = super(Base, self).create(vals)
-        print ("\n\n CREATE : ",res.display_name)
         if not res.display_name:
             res.display_name = res.name_get()[0][1]
         return res
@@ -23,8 +22,11 @@ class Base(models.AbstractModel):
     def write(self, vals):
         res = super(Base, self).write(vals)
         for rec in self:
-            if not rec.display_name:
+            if not rec.display_name or vals.get('name'):
                 rec.display_name = rec.name_get()[0][1]
+                if rec.child_ids:
+                    for child in rec.child_ids:
+                        child.display_name = child.name_get()[0][1]
         return res
 
     @api.multi
