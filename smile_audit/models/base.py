@@ -22,7 +22,7 @@ class Base(models.AbstractModel):
     def write(self, vals):
         res = super(Base, self).write(vals)
         for rec in self:
-            if not rec.display_name or vals.get('name'):
+            if not rec.display_name or vals.get('name_get'):
                 rec.display_name = rec.name_get()[0][1]
                 if rec.child_ids:
                     for child in rec.child_ids:
