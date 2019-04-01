@@ -20,9 +20,14 @@ class Base(models.AbstractModel):
 
     @api.multi
     def write(self, vals):
-        if vals.get('name'):
-            vals.update({'display_name': vals['name']})
-        return super(Base, self).write(vals)
+        res = super(Base, self).write(vals)
+        for rec in self:
+            if not rec.display_name or vals.get('name'):
+                rec.display_name = rec.name_get()[0][1]
+                if rec._name == 'res.partner' and rec.child_ids:
+                    for child in rec.child_ids:
+                        child.display_name = child.name_get()[0][1]
+        return res
 
     @api.multi
     def _read_from_database(self, field_names, inherited_field_names=[]):
